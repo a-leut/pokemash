@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div id="pokes_div">
+    <div id="lpoke_div">
+        <img class="pokesprite" id="lpoke" />
+        <span id="lpoke_lbl"></span>
+    </div>
+    <div id="rpoke_div">
+        <img class="pokesprite" id="rpoke" />
+        <span id="rpoke_lbl"></span>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type=text/javascript>
+
+$(document).ready(function() {
+    getNewPokemon();
+});
+
+$(document).keydown(function(e) {
+    if (e.keyCode == 37) {
+        choosePokemon("#lpoke");
+    }
+    else if (e.keyCode == 39) {
+        choosePokemon("#rpoke");
+    }
+});
+
+$("#lpoke").click(function() {choosePokemon("#lpoke")});
+$("#rpoke").click(function() {choosePokemon("#rpoke")});
+
+function padNum(num) {
+    var s = num.toString();
+    if (s.length == 1) {
+        return "00" + s;
+    }
+    else if (s.length == 2) {
+        return "0" + s;
+    }
+    else {
+        return s;
+    }
+}
+
+function numToImageUrl(num) {
+    return $SCRIPT_ROOT + "/static/images/" + padNum(num) + ".png";
+}
+
+function getPokemonName(p_id) {
+    var name = "";
+
+    $.ajax({
+        url: $SCRIPT_ROOT + "/static/pokemon.json",
+        dataType: "json",
+        async: false,
+        success: function(data) {
+            name = data[p_id-1].identifier;
+        }
+    });
+
+    return name;
+}
+
+function getNewPokemon() {
+    $.getJSON($SCRIPT_ROOT + "/_get_poke", function(data) {
+        var p_id1 = data.p_id1;
+        var p_id2 = data.p_id2;      
+        $("#lpoke").attr("src", numToImageUrl(p_id1));
+        $("#rpoke").attr("src", numToImageUrl(p_id2));
+        $("#lpoke_lbl").text("#"+padNum(p_id1)+" "+getPokemonName(p_id1));
+        $("#rpoke_lbl").text("#"+padNum(p_id2)+" "+getPokemonName(p_id2));
+    });
+}
+
+function choosePokemon(pokemon) {
+    $(pokemon).addClass("flash"); 
+    setTimeout(function() {
+        $(pokemon).removeClass("flash");
+        $.get($SCRIPT_ROOT + "/_choose_winner", {
+            lpoke: $("#lpoke_lbl").text(),
+            rpoke: $("#rpoke_lbl").text(),
+            winner: pokemon
+        });
+        getNewPokemon();
+    }, 300);
+}
+</script>
+{% endblock %}

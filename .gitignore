@@ -1,3 +1,7 @@
+# Images of hundreds of pokemon
+static/poke/
+static/images/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

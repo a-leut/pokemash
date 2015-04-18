@@ -1,0 +1,35 @@
+body {
+    padding-top: 60px;
+
+}
+
+.flash {
+    background-color:#FFF000;
+}
+
+.pokesprite {
+
+    width, height: 96px;
+    margin: 27px;
+    transition: all .3s;
+}
+
+#pokes_div {   
+    width: 300px;
+    margin: 0 auto;
+}
+
+#lpoke_div, #rpoke_div {
+    width: 150px;
+}
+
+#lpoke_div {
+    float: left;
+    
+}
+
+#rpoke_div {
+    float: right;
+}
+
+
